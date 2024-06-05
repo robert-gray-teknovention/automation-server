@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %} | Train Dashboard {% endblock %}
+{% block content %}
+<div id="gauge-container"></div>
+
+    <script>
+
+        // Function to update the gauge value every second
+        function updateGaugeValue() {
+            var newValue = Math.floor(Math.random() * 100); // Replace with your value source
+            $('#number').text(newValue);
+            setTimeout(updateGaugeValue, 1000); // Update every second
+        }
+
+        updateGaugeValue(); // Start updating the gauge
+    </script>
+Random Number <div id='number'>Hello</div>
+{% endblock %}

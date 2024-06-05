@@ -1,0 +1,96 @@
+{% extends 'automation/dashboard.html' %}
+{% block sub_content %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    {% regroup object_list by device as device_list %}
+    {% for d in device_list%}
+        {% for function in d.list %}
+        $("#{{function.id}}_button").on('click', function(){
+          //print(event.data.id)
+          getValue({{ function.id }});
+        })
+        {% endfor %}
+    {% endfor %}
+    function getValue(function_id) {
+      var args=[];
+      $("input[name='" + function_id + "_args']").each(function(){
+        console.log("arg " + $(this).val());
+        args.push($(this).val());
+        //console.log(args);
+      })
+      $('#'+function_id + '_value').val('waiting');
+      //console.log("Here are the args " + $("input[name='" + function_id + "_args']").val());
+      $.ajax({
+        url: "http://{{ request.get_host }}/apis/function/" + function_id + "/value/",
+        type: "GET",
+        data: {args: args, var1:"hello"},
+        dataType: 'json',
+        success: function(res) {
+          console.log(res);
+          $('#' + function_id + '_value').val(res.ret_value);
+        }
+      })
+    }
+
+
+  })
+
+
+
+
+</script>
+<style media="screen">
+</style>
+<section id="bc" class="mt-3 center">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'home' %}">
+            <i class="fas fa-home"></i> Home</a>
+        </li>
+        <li class="breadcrumb-item active"> Dashboard</li>
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<section id="functions" class="py-4 center">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        {% regroup object_list by device as device_list %}
+        <ul>
+
+          {% for device in device_list %}
+
+          <li>{{ device.grouper }}
+            <ul>
+              {% for function in device.list %}
+              <li> {{function.name}}, Arguments,
+
+                {% for arg in function.args %}
+                  {{ arg }}: <input type="text" name="{{ function.id}}_args">
+                {% endfor %}
+                <input id="{{function.id}}_value" type="text" name="" value="{{function.value}}">
+                {% if function.read_write == 1 %}
+                <button class='button' id="{{ function.id }}_button">Read</button>
+
+                {% elif function.read_write == 2 %}
+                <button class='button' id="{{ function.id }}_button">Write</button>
+                {% else %}
+                <button class='button' id="{{ function.id }}_button">Run</button>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+          </li>
+          {% endfor %}
+        </ul>
+
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
