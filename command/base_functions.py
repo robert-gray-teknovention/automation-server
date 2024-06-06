@@ -79,9 +79,7 @@ class UtilityFunctionsMixin():
                     'func_name': f[0],
                 }
                 func.update(default_description)
-                print(str(f[1].__doc__))
                 func.update(json.loads(str(f[1].__doc__)))
-
                 args = inspect.getfullargspec(f[1]).args
                 args.pop(0)  # Remove the cls argument from class inspection
                 if args and (args[-1] in ['cb', 'callback']):
