@@ -5,16 +5,13 @@ import threading
 from automation.models import MqttBroker
 import json
 import time
-
-if settings.SYSTEM == 'pi':
-    import command.pifunctions as functions
-else:
-    import command.functions as functions
+from command.functions import SystemFunctions
 
 
 class Commander():
     def __init__(self, client):
         self.client = client
+        self.functions = SystemFunctions()
 
     def finished(self, cmd):
         cmd.executed = True
@@ -76,7 +73,7 @@ class Commander():
                     'timestamp': serialize_datetime(settings.TZ.localize(datetime.now()))
                 }
 
-                func = getattr(functions, cmd.function.name)
+                func = getattr(self.functions, cmd.function.name)
 
                 if cmd.function.asyncro:
                     args.append(lambda: self.finished(cmd))

@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import viewsets
 from django.http import JsonResponse
-from datetime import datetime
 from automation.factories import commander
 from .serializers import (
     UserSerializer,

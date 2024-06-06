@@ -5,14 +5,14 @@ import json
 from command.models import Command
 from django.conf import settings
 from datetime import datetime
-import command.functions as functions
-import asyncio
+from command.functions import SystemFunctions
 
 
 class MqttConnection():
     def __init__(self, server):
         self.server = server
         self.message_queue = Queue()
+        self.functions = SystemFunctions()
 
     def connect(self):
         self.client = mqtt.Client()  # This queue doesn't do anything yet
@@ -85,7 +85,7 @@ class MqttConnection():
         if 'server' in cmd:
             server = cmd['server']
         try:
-            func = getattr(functions, cmd['function'])
+            func = getattr(self.functions, cmd['function'])
             if cmd['async'] is True:
                 def pub_msg(ret_value):
                     ret_msg = {
@@ -103,6 +103,7 @@ class MqttConnection():
                 print(str(cmd['args']))
                 func(*cmd['args'])
             else:
+                print('Args ', str(cmd['args']))
                 ret_msg = {
                     'cmd_id': cmd['id'],
                     'server': server,
