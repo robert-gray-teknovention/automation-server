@@ -126,5 +126,6 @@ Control.last-run
 Control.ca-list 
 Control.ca-bundle 
 Control.system-ca-bundle 
-GitHub.sublime-settings 
-
+GitHub.sublime-settings
+#Functions are specific for each device 
+command/functions.py
