@@ -25,7 +25,6 @@ class UtilityFunctionsMixin():
                     f.save()
 
                 for item in ret_message['ret_value']['items']:
-                    print("we are iterating")
                     try:
                         rw = getattr(rw_choices, item['read_write'].upper())
 

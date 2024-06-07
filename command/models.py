@@ -13,15 +13,19 @@ class DeviceType(models.Model):
 
 
 class Device(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     device_id = models.UUIDField(default=uuid.uuid4)
     device_type = models.ForeignKey(DeviceType, on_delete=models.CASCADE, null=True)
+    is_itself = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+        if (self.is_itself and not Device.objects.filter(is_itself=True).exists() or not self.is_itself):
+            super().save(*args, **kwargs)
+        else:
+            raise Exception("A Device already exists that is a reference to itself.  Device was not saved.")
 
         def create_func(name, read_write):
             func = Function()
@@ -35,8 +39,6 @@ class Device(models.Model):
             func.save()
         if self.functions.filter(name='read_functions', device=self).count() == 0:
             create_func('read_functions', Function.ReadWriteChoices.READ)
-        if self.functions.filter(name='write_functions', device=self).count() == 0:
-            create_func('write_functions', Function.ReadWriteChoices.WRITE)
 
 
 class Function(models.Model):
