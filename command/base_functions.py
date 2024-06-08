@@ -67,7 +67,8 @@ class UtilityFunctionsMixin():
         from .models import Device
         types = settings.DEVICE_TYPES
         for t in types:
-            Device.objects.get_or_create(name=t)
+            device, created = Device.objects.get_or_create(name=t)
+            print(device.name, " ", created)
 
     def read_functions(self):
         '''{"read_write": "read", "response_timeout": 5, "type": "sync"}'''
