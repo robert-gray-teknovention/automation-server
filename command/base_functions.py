@@ -64,10 +64,10 @@ class UtilityFunctionsMixin():
         commander.run(cmd, remote_callback)
 
     def add_default_device_types():
-        from .models import Device
+        from .models import DeviceType
         types = settings.DEVICE_TYPES
         for t in types:
-            device, created = Device.objects.get_or_create(name=t)
+            device, created = DeviceType.objects.get_or_create(name=t)
             print(device.name, " ", created)
 
     def read_functions(self):
