@@ -146,7 +146,7 @@ USE_I18N = True
 USE_TZ = True
 
 SYSTEM = env('DEVICE_ID')
-
+DEVICE_TYPES = env('DEFAULT_DEVICE_TYPES').split(', ')
 
 TZ = pytz.timezone(TIME_ZONE)
 # Static files (CSS, JavaScript, Images)

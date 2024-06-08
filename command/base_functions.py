@@ -63,6 +63,12 @@ class UtilityFunctionsMixin():
         cmd.args = []
         commander.run(cmd, remote_callback)
 
+    def add_default_device_types():
+        from .models import Device
+        types = settings.DEVICE_TYPES
+        for t in types:
+            Device.objects.get_or_create(name=t)
+
     def read_functions(self):
         '''{"read_write": "read", "response_timeout": 5, "type": "sync"}'''
         default_description = {
