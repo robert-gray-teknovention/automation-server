@@ -22,7 +22,7 @@ class Device(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        if (self.is_itself and not Device.objects.filter(is_itself=True).exists() or not self.is_itself):
+        if (self.is_itself and not Device.objects.filter(is_itself=True).exists()) or not self.is_itself or self.id:
             super().save(*args, **kwargs)
         else:
             raise Exception("A Device already exists that is a reference to itself.  Device was not saved.")
