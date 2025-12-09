@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 from django.http import JsonResponse
 from automation.factories import commander
+import traceback
 from .serializers import (
     UserSerializer,
     RealDataItemSerializer,
@@ -350,5 +351,6 @@ def function_value(request, **kwargs):
                     time.sleep(.5)
                     print("not complete")
             return JsonResponse("We did not get a value ", status=200, safe=False)
-        except Exception:
+        except Exception as e:
+            print(traceback.format_exc())
             return JsonResponse({"ret_value": "Error: Check arguments are set."}, status=200, safe=False)
